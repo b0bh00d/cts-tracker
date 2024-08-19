@@ -107,11 +107,11 @@ if __name__ == "__main__":
     run_file = os.path.join(options.repo, 'data', 'dump.json')
     last_run_date = os.stat(run_file).st_mtime
 
-    # do an update on the local repo
+    # make sure the local report is current
     cwd = os.getcwd()
     os.chdir(options.repo)
     try:
-        subprocess.check_call(['git', 'pull'])
+        output = subprocess.check_output(['git', 'pull'], stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError:
         print('Error: failed to execute an update of the local repo')
         sys.exit(1)
@@ -165,19 +165,19 @@ if __name__ == "__main__":
         os.chdir(options.repo)
 
         try:
-            subprocess.check_call(['git', 'add', '.'])
+            output = subprocess.check_call(['git', 'add', '.'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             print('Error: failed to execute an add on the local repo')
             sys.exit(1)
 
         try:
-            subprocess.check_call(['git', 'commit', '-m', 'Automatic updated of history and charts'])
+            output = subprocess.check_call(['git', 'commit', '-m', 'Automatic updated of history and charts'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             print('Error: failed to execute a commit on the local repo')
             sys.exit(1)
 
         try:
-            subprocess.check_call(['git', 'push'])
+            output = subprocess.check_call(['git', 'push'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             print('Error: failed to execute a push on the local repo')
             sys.exit(1)
